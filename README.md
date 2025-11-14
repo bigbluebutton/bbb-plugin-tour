@@ -29,6 +29,16 @@ npm run build-bundle
 
 The above command will generate the `dist` folder, containing the bundled JavaScript file named `TourPlugin.js`, a directory of locale files and a license files. These files can be hosted on any HTTPS server along with the `manifest.json` which is also part of the `dist/` directory.
 
+```
+dist/
+├── locales/
+│   └── en.json
+│   └── (all other locales)
+├── manifest.json
+├── TourPlugin.js
+└── TourPlugin.js.LICENSE.txt
+```
+
 If you install the Plugin separated to the manifest, remember to change the `javascriptEntrypointUrl` in the `manifest.json` to the correct endpoint.
 
 To use the plugin in BigBlueButton, send this parameter along in create call:
