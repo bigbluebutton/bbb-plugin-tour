@@ -149,7 +149,7 @@ const getBackButton = (intl, tour) => ({
 
 const getKnowMoreButton = (intl, url) => ({
   text: intl.formatMessage(intlMessages.knowMore),
-  action: () => { window.open(url); },
+  action: () => { window.open(url, '_blank', 'noopener,noreferrer'); },
   secondary: true,
 });
 
