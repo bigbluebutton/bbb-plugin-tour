@@ -2,32 +2,21 @@
 
 ## Description
 
-This plugins adds a button in the options dropdown menu to start a Tour to guide user to some of the features of Bigbluebutton. It uses the [shepherd.js](https://github.com/shepherd-pro/shepherd) library.
+This plugin adds a button in the options dropdown menu to start a Tour to guide user to some of the features of BigBlueButton. It uses the [shepherd.js](https://github.com/shepherd-pro/shepherd) library.
 
 ![Gif of plugin demo](./public/assets/plugin.gif)
 
 You can configure some "Learn More" links that are shown in some steps (screenshare, whiteboard, general) in the settings of the plugin, see example below.
 
-## Running the Plugin From Source Code
+## Plugin Versioning
 
-1. Start the development server:
+Please be aware that we have a separate branch of this plugin for each version of the SDK. This ensures that everything merged into a branch is compatible with the corresponding version of the BigBlueButton core. As of now, here’s the correspondence between the branches, SDK versions, and BigBlueButton core versions:
 
-```bash
-npm install
-npm start
-```
+| Repository Branch | Plugin-SDK Version | BigBlueButton Core Version |
+|------------------|--------------------|----------------------------|
+| v0.0.x           | v0.0.x             | v3.0.x                     |
+| v0.1.x           | v0.1.x             | v3.1.x                     |
 
-2. Add this to the `settings.yml` of the BBB HTML5-client:
-```yaml
-public:
-  plugins:
-    - name: TourPlugin
-      settings:
-        url:
-          screenshare: "https://some.url.with.more.information"
-          whiteboard: "https://some.url.with.more.information"
-          general: "https://some.url.with.more.information"
-```
 
 ## Building the Plugin
 
@@ -38,9 +27,7 @@ npm ci
 npm run build-bundle
 ```
 
-The above command will generate the `dist` folder, containing the bundled JavaScript file named `TourPlugin.js`. This file can be hosted on any HTTPS server.
-
-Alternatively, you can host the bundled file on the BigBlueButton server by copying dist/TourPlugin.js to the folder /var/www/bigbluebutton-default/assets/plugins. In this case, the <<PLUGIN_URL>> will be https://<your-host>/plugins/TourPlugin.js.
+The above command will generate the `dist` folder, containing the bundled JavaScript file named `TourPlugin.js`, a directory of locale files and a license files. These files can be hosted on any HTTPS server along with the `manifest.json` which is also part of the `dist/` directory.
 
 If you install the Plugin separated to the manifest, remember to change the `javascriptEntrypointUrl` in the `manifest.json` to the correct endpoint.
 
@@ -50,7 +37,7 @@ To use the plugin in BigBlueButton, send this parameter along in create call:
 pluginManifests=[{"url":"<your-domain>/path/to/manifest.json"}]
 ```
 
-Or additionally, you can add this same configuration in the `.properties` file from `bbb-web` in `/etc/bigbluebutton/bbb-web.properties`
+Or additionally, you can add this same configuration in `/etc/bigbluebutton/bbb-web.properties`.
 
 ## Development mode
 
