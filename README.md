@@ -2,7 +2,7 @@
 
 ## Description
 
-This plugins adds a button in the options dropdown menu to start a Tour to guide user to some of the features of Bigbluebutton. It uses the [sheperd.js](https://github.com/shepherd-pro/shepherd) library.
+This plugins adds a button in the options dropdown menu to start a Tour to guide user to some of the features of Bigbluebutton. It uses the [shepherd.js](https://github.com/shepherd-pro/shepherd) library.
 
 ![Gif of plugin demo](./public/assets/plugin.gif)
 
