@@ -108,9 +108,9 @@ function TourPlugin(
 
   let messages = {};
   try {
-    messages = require(`../locales/${currentLocale.locale.replace('-', '_')}.json`);
+    messages = require(`../../public/locales/${currentLocale.locale.replace('-', '_')}.json`);
   } catch {
-    messages = require(`../locales/${currentLocale.fallbackLocale.replace('-', '_')}.json`);
+    messages = require(`../../public/locales/${currentLocale.fallbackLocale.replace('-', '_')}.json`);
   }
   /* eslint-disable import/no-dynamic-require, global-require,
   @typescript-eslint/no-require-imports */
