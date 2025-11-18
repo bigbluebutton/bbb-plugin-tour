@@ -1,4 +1,4 @@
-name: Cut a new tag (also auto updates package.json and package-lock.json)
+name: Cut a new tag (also auto updates package.json, package-lock.json, manifest.json, debian/changelog)
 
 on:
   workflow_dispatch:
@@ -13,50 +13,95 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-    - name: Get triggering user's email
-      run: |
-        user_email=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/users/${{ github.actor }} | jq -r '.email')
-        if [ -z "$user_email" ] || [ "$user_email" == "null" ]; then
-          user_email="github-actions@github.com"
-        fi
-        echo "user_email=$user_email" >> $GITHUB_ENV
-    
-    - name: Configure Git with the triggering user's info
-      run: |
-        git config user.name "${{ github.actor }}"
-        git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+      - name: Get triggering user's email
+        run: |
+          user_email=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/users/${{ github.actor }} | jq -r '.email')
+          if [ -z "$user_email" ] || [ "$user_email" == "null" ]; then
+            user_email="github-actions@github.com"
+          fi
+          echo "user_email=$user_email" >> $GITHUB_ENV
 
-    - name: Bump version, update manifest, commit and tag
-      run: |
-        set -euo pipefail
+      - name: Configure Git with the triggering user's info
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
 
-        npm install
+      - name: Bump version, update manifest, update debian changelog, commit and tag
+        run: |
+          set -euo pipefail
 
-        # 1) Bump package.json + package-lock.json but DO NOT commit/tag yet
-        npm version ${{ github.event.inputs.release_type }} --no-git-tag-version
+          # 1) Install deps
+          npm install
 
-        # 2) Read the new version from package.json
-        NEW_VERSION=$(node -p "require('./package.json').version")
-        echo "New version is: $NEW_VERSION"
+          # 2) Bump package.json + package-lock.json but DO NOT commit/tag yet
+          npm version ${{ github.event.inputs.release_type }} --no-git-tag-version
 
-        # 3) Update manifest.json's "version" field to match
-        jq --arg v "$NEW_VERSION" '.version = $v' manifest.json > manifest.json.tmp
-        mv manifest.json.tmp manifest.json
+          # 3) Read the new version from package.json
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "New version is: $NEW_VERSION"
 
-        # 4) Commit everything and create an annotated tag
-        git add package.json package-lock.json manifest.json
-        git commit -m "chore: bump version to $NEW_VERSION"
-        git tag -a "v$NEW_VERSION" -m "v$NEW_VERSION"
+          # 4) Update manifest.json's "version" field to match
+          jq --arg v "$NEW_VERSION" '.version = $v' manifest.json > manifest.json.tmp
+          mv manifest.json.tmp manifest.json
 
-        # 5) Push commit and tag
-        git push --follow-tags
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 5) Update debian/changelog
+          #
+          #    - Get package name from existing changelog (first token on first line)
+          #    - Collect commit messages since the last tag (if any), otherwise all commits
+          #    - Prepend a new stanza with the new version and those commits
+          #
+          PKG_NAME="$(head -n1 debian/changelog | awk '{print $1}')"
+
+          # Commits since last tag (if exists)
+          if git describe --tags --abbrev=0 >/dev/null 2>&1; then
+            LAST_TAG="$(git describe --tags --abbrev=0)"
+            COMMITS=$(git log --pretty='* %s (%h)' "${LAST_TAG}..HEAD")
+          else
+            COMMITS=$(git log --pretty='* %s (%h)')
+          fi
+
+          # Fallback if no commits for some reason
+          if [ -z "$COMMITS" ]; then
+            COMMITS="* Automated release v$NEW_VERSION"
+          fi
+
+          # Author info for changelog footer
+          AUTHOR_NAME="${{ github.actor }}"
+          AUTHOR_EMAIL="${{ env.user_email }}"
+
+          # Debian-style date (RFC 2822)
+          DATE_STR="$(date -R)"
+
+          # Prepend new entry to debian/changelog
+          {
+            echo "${PKG_NAME} (${NEW_VERSION}) jammy; urgency=medium"
+            echo
+            echo "${COMMITS}" | sed 's/^/* /' | sed 's/^* \*/*/'  # ensure lines start with "* "
+            echo
+            echo " -- ${AUTHOR_NAME} <${AUTHOR_EMAIL}>  ${DATE_STR}"
+            echo
+            cat debian/changelog
+          } > debian/changelog.new
+
+          mv debian/changelog.new debian/changelog
+
+          echo "Updated debian/changelog:"
+          head -n 20 debian/changelog
+
+          # 6) Commit everything and create an annotated tag
+          git add package.json package-lock.json manifest.json debian/changelog
+          git commit -m "chore: bump version to $NEW_VERSION"
+          git tag -a "v$NEW_VERSION" -m "v$NEW_VERSION"
+
+          # 7) Push commit and tag
+          git push --follow-tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
