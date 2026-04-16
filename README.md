@@ -29,7 +29,7 @@ Example `settings.yml` configuration:
 ```yaml
 public:
   plugins:
-    - name: TourPlugin
+    - name: BbbPluginTour
       settings:
         url:
           screenshare: "https://some.url.with.more.information"
@@ -66,13 +66,13 @@ dist/
 │   └── en.json
 |   └── ...
 ├── manifest.json
-├── TourPlugin.js
-└── TourPlugin.js.LICENSE.txt
+├── BbbPluginTour.js
+└── BbbPluginTour.js.LICENSE.txt
 ```
 
 These files can be hosted on any HTTPS server.
 
-If you host the JavaScript bundle separately from the manifest, remember to update the `javascriptEntrypointUrl` in `manifest.json` to the correct URL of `TourPlugin.js`.
+If you host the JavaScript bundle separately from the manifest, remember to update the `javascriptEntrypointUrl` in `manifest.json` to the correct URL of `BbbPluginTour.js`.
 
 ### Using the Plugin in BigBlueButton
 
@@ -150,7 +150,7 @@ That documentation covers:
    ```yaml
    public:
      plugins:
-       - name: TourPlugin
+       - name: BbbPluginTour
          settings:
            url:
              screenshare: "https://your.docs/screenshare"
@@ -165,7 +165,7 @@ The Tour Plugin is delivered as static assets (JavaScript + manifest + locales) 
 * A standard HTTPS virtual host serving the plugin files.
 * CORS and CSP rules that allow the HTML5 client to load the plugin bundle and manifest.
 
-If you are already serving other plugin bundles, you can typically reuse that same configuration and just add `TourPlugin.js` and `manifest.json` under the same path.
+If you are already serving other plugin bundles, you can typically reuse that same configuration and just add `BbbPluginTour.js` and `manifest.json` under the same path.
 
 ## Security considerations
 
