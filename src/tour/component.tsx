@@ -7,7 +7,7 @@ import { IntlShape, createIntl, defineMessages } from 'react-intl';
 import {
   BbbPluginSdk, OptionsDropdownOption, PluginApi,
   pluginLogger, IntlLocaleUiDataNames,
-  LayoutPresentatioAreaUiDataNames, UiLayouts,
+  LayoutPresentationAreaUiDataNames, UiLayouts,
 } from 'bigbluebutton-html-plugin-sdk';
 import { TourPluginProps, Settings, ClientSettingsSubscriptionResultType } from './types';
 import getTourFeatures from './getTourFeatures';
@@ -84,7 +84,7 @@ function TourPlugin(
     fallbackLocale: 'en',
   });
 
-  const layoutInformation = pluginApi.useUiData(LayoutPresentatioAreaUiDataNames.CURRENT_ELEMENT, [{
+  const layoutInformation = pluginApi.useUiData(LayoutPresentationAreaUiDataNames.CURRENT_ELEMENT, [{
     isOpen: presentationInitiallyOpened,
     currentElement: UiLayouts.WHITEBOARD,
   }]);
@@ -148,7 +148,9 @@ function TourPlugin(
         icon: 'presentation',
         onClick: async () => {
           setPresentationInitiallyOpened(layoutInformation[0]?.isOpen);
-          pluginLogger.info('Starting Tour');
+					pluginLogger.info({
+			      logCode: 'plg_started',
+			    }, `Plugin started: ${pluginApi.pluginName}`);
           // ensure only userList is open (to also work on Mobile)
           pluginApi.uiCommands.sidekickOptionsContainer.close();
           pluginApi.uiCommands.sidekickOptionsContainer.open();

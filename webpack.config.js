@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require('path');
+
 module.exports = {
   entry: './src/index.tsx',
   output: {
     filename: 'TourPlugin.js',
     library: 'TourPlugin',
     libraryTarget: 'umd',
-    publicPath: '/static/',
+    publicPath: '/',
     globalObject: 'this',
   },
   devServer: {
@@ -16,7 +20,19 @@ module.exports = {
     client: {
       overlay: false,
     },
-  },
+		setupMiddlewares: (middlewares, devServer) => {
+			if (!devServer) {
+				throw new Error('webpack-dev-server is not defined');
+			}
+
+			// Serve manifest.json from the project root when requested at /manifest.json
+			devServer.app.get('/manifest.json', (req, res) => {
+				res.sendFile(path.resolve(__dirname, 'manifest.json'));
+			});
+
+			return middlewares;
+		},
+	},
   module: {
     rules: [
       {
@@ -40,4 +56,11 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.tsx', '.ts'],
   },
+  plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'manifest.json', to: './' }, // Copy manifest.json to static/ in the output folder
+      ],
+    }),
+  ],
 };
