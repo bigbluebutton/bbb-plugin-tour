@@ -7,7 +7,7 @@ import { IntlShape, createIntl, defineMessages } from 'react-intl';
 import {
   BbbPluginSdk, OptionsDropdownOption, PluginApi,
   pluginLogger, IntlLocaleUiDataNames,
-  LayoutPresentatioAreaUiDataNames, UiLayouts,
+  LayoutPresentationAreaUiDataNames, UiLayouts,
 } from 'bigbluebutton-html-plugin-sdk';
 import { TourPluginProps, Settings, ClientSettingsSubscriptionResultType } from './types';
 import getTourFeatures from './getTourFeatures';
@@ -57,14 +57,13 @@ export function startTour(
     presentationInitiallyOpened,
   ).forEach((feature) => {
     feature.steps.forEach((step) => {
-      /* @ts-ignore */
       tour.addStep({
         ...step,
         // Only show step if the element is visible
         showOn: () => !!document.querySelector(
           step.attachTo.element,
         ),
-      });
+      } as Parameters<typeof tour.addStep>[0]);
     });
   });
 
@@ -84,10 +83,14 @@ function TourPlugin(
     fallbackLocale: 'en',
   });
 
-  const layoutInformation = pluginApi.useUiData(LayoutPresentatioAreaUiDataNames.CURRENT_ELEMENT, [{
-    isOpen: presentationInitiallyOpened,
-    currentElement: UiLayouts.WHITEBOARD,
-  }]);
+  const layoutInformation = pluginApi.useUiData(
+    LayoutPresentationAreaUiDataNames.CURRENT_ELEMENT,
+    [{
+      isOpen: presentationInitiallyOpened,
+      currentElement: UiLayouts.WHITEBOARD,
+    },
+    ],
+  );
 
   // TODO revisit when fixed
   // const settings = pluginApi.usePluginSettings()?.data;
@@ -148,7 +151,9 @@ function TourPlugin(
         icon: 'presentation',
         onClick: async () => {
           setPresentationInitiallyOpened(layoutInformation[0]?.isOpen);
-          pluginLogger.info('Starting Tour');
+          pluginLogger.info({
+            logCode: 'plg_started',
+          }, `Plugin started: ${pluginApi.pluginName}`);
           // ensure only userList is open (to also work on Mobile)
           pluginApi.uiCommands.sidekickOptionsContainer.close();
           pluginApi.uiCommands.sidekickOptionsContainer.open();
