@@ -22,7 +22,7 @@
     "build-bundle": "webpack --mode production",
     "start": "webpack serve --mode development",
     "build:watch": "rm -rf dist && tsc -w --module CommonJS",
-    "lint": "eslint ./src/*",
+    "lint": "eslint ./src",
     "lint:fix": "npm run lint -- --fix",
     "lint:watch": "watch 'yarn lint'"
   },

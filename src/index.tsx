@@ -9,10 +9,10 @@ const pluginName = document.currentScript?.getAttribute('pluginName') || 'plugin
 const root = ReactDOM.createRoot(document.getElementById(uuid));
 root.render(
   <React.StrictMode>
-      <TourPlugin {...{
-        pluginUuid: uuid,
-        pluginName,
-      }}
-      />
+    <TourPlugin {...{
+      pluginUuid: uuid,
+      pluginName,
+    }}
+    />
   </React.StrictMode>,
 );
