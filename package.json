@@ -18,7 +18,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-intl": "^6.6.8",
-    "shepherd.js": "^12.0.5"
+    "shepherd.js": "^15.3.0"
   },
   "scripts": {
     "build-bundle": "webpack --mode production",
