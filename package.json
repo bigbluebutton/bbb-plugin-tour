@@ -18,7 +18,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-intl": "^6.6.8",
-    "shepherd.js": "^12.0.5"
+    "shepherd.js": "^15.3.0"
   },
   "scripts": {
     "build-bundle": "webpack --mode production",
@@ -52,7 +52,7 @@
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
     "babel-loader": "^9.1.2",
-    "copy-webpack-plugin": "^12.0.2",
+    "copy-webpack-plugin": "^14.0.0",
     "css-loader": "^6.7.4",
     "eslint": "^8.45.0",
     "eslint-config-airbnb": "^19.0.4",
@@ -67,9 +67,9 @@
     "style-loader": "^3.3.3",
     "ts-loader": "^9.4.3",
     "typescript": "^5.1.6",
-    "watch": "^1.0.2",
+    "watch": "^0.13.0",
     "webpack": "^5.83.1",
     "webpack-cli": "^5.1.1",
-    "webpack-dev-server": "^4.15.1"
+    "webpack-dev-server": "^6.0.0"
   }
 }
