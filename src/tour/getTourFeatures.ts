@@ -105,14 +105,6 @@ const intlMessages = defineMessages({
     id: 'app.tour.panel.appsGallery',
     description: 'Apps Gallery label',
   },
-  questions: {
-    id: 'app.tour.panel.questions',
-    description: 'Questions label',
-  },
-  plusActions: {
-    id: 'app.tour.plusActions',
-    description: 'Plus actions label',
-  },
   sessionDetails: {
     id: 'app.tour.sessionDetails',
     description: 'Session details label',
@@ -522,34 +514,6 @@ const getTourFeatures = (
           'before-show': () => actions.openUserList(),
         },
       },
-      {
-        id: 'panel.questions',
-        attachTo: { element: '[data-test="questionsButton"]', on: 'bottom' },
-        text: intl.formatMessage(intlMessages.questions),
-        buttons: [
-          getBackButton(intl, tour),
-          getNextButton(intl, tour),
-        ],
-      },
-    ],
-  };
-
-  const plusActionsFeature: TourFeature = {
-    name: 'plusActions',
-    date: new Date(0),
-    steps: [
-      {
-        id: 'plusActions',
-        attachTo: { element: '[data-test="actionsButton"]', on: 'top' },
-        text: intl.formatMessage(intlMessages.plusActions),
-        buttons: [
-          getBackButton(intl, tour),
-          getNextButton(intl, tour),
-        ],
-        when: {
-          'before-show': () => actions.closePanel(),
-        },
-      },
     ],
   };
 
@@ -655,7 +619,6 @@ const getTourFeatures = (
 
   const features = [
     panelFeature,
-    plusActionsFeature,
     microphoneToggleFeature,
     audioJoinFeature,
     leaveAudioFeature,
