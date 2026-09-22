@@ -251,7 +251,7 @@ const getTourFeatures = (
     steps: [
       {
         id: 'leaveAudio',
-        attachTo: { element: '[data-key="joinAudio"]', on: 'top' },
+        attachTo: { element: '[data-test="leaveListenOnly"]', on: 'top' },
         text: intl.formatMessage(intlMessages.leaveAudio),
         buttons: [
           getBackButton(intl, tour),
@@ -454,7 +454,10 @@ const getTourFeatures = (
     steps: [
       {
         id: 'userListToggle',
-        attachTo: { element: '[data-test="toggleUserList"]', on: 'bottom' },
+        attachTo: {
+          element: '[data-test="toggleSidebarNavigation"], [data-test="hasUnreadMessages"]',
+          on: 'bottom',
+        },
         text: intl.formatMessage(intlMessages.userListToggle),
         buttons: [
           getBackButton(intl, tour),
@@ -488,7 +491,7 @@ const getTourFeatures = (
       },
       {
         id: 'panel.chat',
-        attachTo: { element: '[data-test="chatButton"]', on: 'bottom' },
+        attachTo: { element: '[data-test="messagesSidebarButton"]', on: 'bottom' },
         text: intl.formatMessage(intlMessages.chat),
         buttons: [
           getBackButton(intl, tour),
@@ -497,7 +500,7 @@ const getTourFeatures = (
       },
       {
         id: 'panel.sharedNotes',
-        attachTo: { element: '[data-test="sharedNotesButton"]', on: 'bottom' },
+        attachTo: { element: '[data-test="sharedNotesSidebarButton"]', on: 'bottom' },
         text: intl.formatMessage(intlMessages.sharedNotes),
         buttons: [
           getBackButton(intl, tour),
