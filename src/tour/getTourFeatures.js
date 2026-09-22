@@ -179,7 +179,6 @@ const getTourFeatures = (
   tour,
   URLS,
   pluginApi,
-  userListOpened,
   presentationInitiallyOpened,
 ) => {
   const actions = {
@@ -187,9 +186,7 @@ const getTourFeatures = (
       pluginApi.uiCommands.sidekickOptionsContainer.close();
     },
     openUserList: () => {
-      if (!userListOpened) {
-        pluginApi.uiCommands.sidekickOptionsContainer.open();
-      }
+      pluginApi.uiCommands.sidekickOptionsContainer.open();
     },
     openPresentation: () => {
       if (!presentationInitiallyOpened) {
