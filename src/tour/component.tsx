@@ -140,7 +140,7 @@ function TourPlugin(
         }
       }
       // removes events
-      endTourEvents.forEach((event) => ShepherdEvents.off(event, undefined));
+      endTourEvents.forEach((endEvent) => ShepherdEvents.off(endEvent, undefined));
     }));
     return () => {
       // removes events
