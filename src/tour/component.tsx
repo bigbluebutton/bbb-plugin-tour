@@ -31,6 +31,17 @@ const intlMessages = defineMessages({
   },
 });
 
+// The client can hand over tags Intl rejects, such as en-US@posix from a POSIX
+// browser locale, and createIntl throws on those, so use the first valid one
+const toIntlLocale = (...locales: string[]): string => locales.find((locale) => {
+  try {
+    Intl.NumberFormat.supportedLocalesOf(locale);
+    return true;
+  } catch {
+    return false;
+  }
+}) ?? 'en';
+
 /**
  * Starts the tour with the steps defined by getTourFeatures()
  * @param {IntlShape} intl Intl object from react-intl
@@ -111,7 +122,7 @@ function TourPlugin(
   }
 
   const intl = createIntl({
-    locale: currentLocale.locale,
+    locale: toIntlLocale(currentLocale.locale, currentLocale.fallbackLocale),
     messages,
     fallbackOnEmptyString: true,
   });
