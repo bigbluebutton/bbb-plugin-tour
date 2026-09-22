@@ -19,7 +19,7 @@
     "build:watch": "rm -rf dist && tsc -w --module CommonJS",
     "lint": "eslint ./src",
     "lint:fix": "npm run lint -- --fix",
-    "lint:watch": "watch 'yarn lint'"
+    "lint:watch": "watch \"npm run lint\" src"
   },
   "browserslist": {
     "production": [
