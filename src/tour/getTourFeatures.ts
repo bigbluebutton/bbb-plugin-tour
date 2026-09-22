@@ -1,21 +1,8 @@
-/**
- * @typedef {Object} TourFeature Represents a feature to be presented in the tour
- * @property {string} name Identifies the feature
- * @property {Date} date Refers to when the feature was "released".
- * This is used to only present features newer than the last time the user saw the tour.
- * @property {Object[]} steps An array of objects where
- * each object is the options to a Step (Shepherd.js)
- * Docs: https://shepherdjs.dev/docs/Step.html#Step
- */
-
-/**
- * Defines the features to be presented in the tour
- *
- * @param {IntlShape} intl An intl object from react-intl
- * @returns {TourFeature[]>}
- */
-
-import { defineMessages } from 'react-intl';
+import { IntlShape, defineMessages } from 'react-intl';
+import { PluginApi } from 'bigbluebutton-html-plugin-sdk';
+import type Step from 'shepherd.js/src/types/step';
+import type Tour from 'shepherd.js/src/types/tour';
+import { Settings, TourFeature } from './types';
 
 const intlMessages = defineMessages({
   next: {
@@ -152,35 +139,38 @@ const intlMessages = defineMessages({
   },
 });
 
-const getNextButton = (intl, tour) => ({
+const getNextButton = (intl: IntlShape, tour: Tour): Step.StepOptionsButton => ({
   text: intl.formatMessage(intlMessages.next),
   action: tour.next,
 });
 
-const getBackButton = (intl, tour) => ({
+const getBackButton = (intl: IntlShape, tour: Tour): Step.StepOptionsButton => ({
   text: intl.formatMessage(intlMessages.back),
   action: tour.back,
   secondary: true,
 });
 
-const getKnowMoreButton = (intl, url) => ({
+const getKnowMoreButton = (intl: IntlShape, url?: string): Step.StepOptionsButton => ({
   text: intl.formatMessage(intlMessages.knowMore),
   action: () => { window.open(url); },
   secondary: true,
 });
 
-const getCloseTourButton = (intl, tour) => ({
+const getCloseTourButton = (intl: IntlShape, tour: Tour): Step.StepOptionsButton => ({
   text: intl.formatMessage(intlMessages.close),
   action: tour.complete,
 });
 
+/**
+ * Defines the features to be presented in the tour
+ */
 const getTourFeatures = (
-  intl,
-  tour,
-  URLS,
-  pluginApi,
-  presentationInitiallyOpened,
-) => {
+  intl: IntlShape,
+  tour: Tour,
+  URLS: Settings['url'],
+  pluginApi: PluginApi,
+  presentationInitiallyOpened: boolean,
+): TourFeature[] => {
   const actions = {
     closePanel: () => {
       pluginApi.uiCommands.sidekickOptionsContainer.close();
@@ -195,7 +185,7 @@ const getTourFeatures = (
     },
   };
 
-  const microphoneToggleFeature = {
+  const microphoneToggleFeature: TourFeature = {
     name: 'microphoneToggle',
     date: new Date(0),
     steps: [
@@ -217,7 +207,7 @@ const getTourFeatures = (
     ],
   };
 
-  const audioJoinFeature = {
+  const audioJoinFeature: TourFeature = {
     name: 'audio',
     date: new Date(0),
     steps: [
@@ -236,7 +226,7 @@ const getTourFeatures = (
     ],
   };
 
-  const audioSelectorFeature = {
+  const audioSelectorFeature: TourFeature = {
     name: 'audioSelector',
     date: new Date(0),
     steps: [
@@ -255,7 +245,7 @@ const getTourFeatures = (
     ],
   };
 
-  const leaveAudioFeature = {
+  const leaveAudioFeature: TourFeature = {
     name: 'leaveAudio',
     date: new Date(0),
     steps: [
@@ -274,7 +264,7 @@ const getTourFeatures = (
     ],
   };
 
-  const videoFeature = {
+  const videoFeature: TourFeature = {
     name: 'video',
     date: new Date(0),
     steps: [
@@ -293,7 +283,7 @@ const getTourFeatures = (
     ],
   };
 
-  const screnshareFeature = {
+  const screnshareFeature: TourFeature = {
     name: 'screenshare',
     date: new Date(0),
     steps: [
@@ -316,7 +306,7 @@ const getTourFeatures = (
     ],
   };
 
-  const reactionsFeature = {
+  const reactionsFeature: TourFeature = {
     name: 'reactions',
     date: new Date(0),
     steps: [
@@ -338,7 +328,7 @@ const getTourFeatures = (
     ],
   };
 
-  const raiseHandFeature = {
+  const raiseHandFeature: TourFeature = {
     name: 'raiseHand',
     date: new Date(0),
     steps: [
@@ -360,7 +350,7 @@ const getTourFeatures = (
     ],
   };
 
-  const whiteboardFeature = {
+  const whiteboardFeature: TourFeature = {
     name: 'whiteboard',
     date: new Date(0),
     steps: [
@@ -420,7 +410,7 @@ const getTourFeatures = (
     ],
   };
 
-  const closePresentationFeature = {
+  const closePresentationFeature: TourFeature = {
     name: 'closePresentation',
     date: new Date(0),
     steps: [
@@ -439,7 +429,7 @@ const getTourFeatures = (
     ],
   };
 
-  const mediaAreaFeature = {
+  const mediaAreaFeature: TourFeature = {
     name: 'closePresentation',
     date: new Date(0),
     steps: [
@@ -458,7 +448,7 @@ const getTourFeatures = (
     ],
   };
 
-  const userListToggleFeature = {
+  const userListToggleFeature: TourFeature = {
     name: 'userListToggle',
     date: new Date(0),
     steps: [
@@ -474,7 +464,7 @@ const getTourFeatures = (
     ],
   };
 
-  const panelFeature = {
+  const panelFeature: TourFeature = {
     name: 'panel',
     date: new Date(0),
     steps: [
@@ -541,7 +531,7 @@ const getTourFeatures = (
     ],
   };
 
-  const plusActionsFeature = {
+  const plusActionsFeature: TourFeature = {
     name: 'plusActions',
     date: new Date(0),
     steps: [
@@ -560,7 +550,7 @@ const getTourFeatures = (
     ],
   };
 
-  const sessionDetailsFeature = {
+  const sessionDetailsFeature: TourFeature = {
     name: 'sessionDetails',
     date: new Date(0),
     steps: [
@@ -579,7 +569,7 @@ const getTourFeatures = (
     ],
   };
 
-  const recordingFeature = {
+  const recordingFeature: TourFeature = {
     name: 'recording',
     date: new Date(0),
     steps: [
@@ -595,7 +585,7 @@ const getTourFeatures = (
     ],
   };
 
-  const connectionStatusFeature = {
+  const connectionStatusFeature: TourFeature = {
     name: 'connectionStatus',
     date: new Date(0),
     steps: [
@@ -611,7 +601,7 @@ const getTourFeatures = (
     ],
   };
 
-  const leaveFeature = {
+  const leaveFeature: TourFeature = {
     name: 'leave',
     date: new Date(0),
     steps: [
@@ -627,7 +617,7 @@ const getTourFeatures = (
     ],
   };
 
-  const moreOptionsFeature = {
+  const moreOptionsFeature: TourFeature = {
     name: 'moreOptions',
     date: new Date(0),
     steps: [
@@ -643,7 +633,7 @@ const getTourFeatures = (
     ],
   };
 
-  const endTourFeature = {
+  const endTourFeature: TourFeature = {
     name: 'endTour',
     date: new Date(0),
     steps: [
@@ -685,8 +675,10 @@ const getTourFeatures = (
 
   // removes back button from the first step visible to user
   const firstVisibleStep = features[0].steps.find((step) => step.buttons);
-  firstVisibleStep.buttons = firstVisibleStep.buttons
-    .filter((button) => button.text !== intl.formatMessage(intlMessages.back));
+  if (firstVisibleStep?.buttons) {
+    firstVisibleStep.buttons = firstVisibleStep.buttons
+      .filter((button) => button.text !== intl.formatMessage(intlMessages.back));
+  }
 
   return features;
 };

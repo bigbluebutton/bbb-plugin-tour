@@ -38,7 +38,7 @@ const intlMessages = defineMessages({
  */
 export function startTour(
   intl: IntlShape,
-  URLS: object,
+  URLS: Settings['url'],
   pluginApi: PluginApi,
   presentationInitiallyOpened: boolean,
 ) {
@@ -67,7 +67,7 @@ export function startTour(
         showOn: () => !!document.querySelector(
           step.attachTo.element,
         ),
-      } as Parameters<typeof tour.addStep>[0]);
+      });
     });
   });
 
