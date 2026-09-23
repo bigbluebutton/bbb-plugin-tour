@@ -4,6 +4,8 @@
 
 This plugins adds a button in the options dropdown menu to start a Tour to guide user to some of the features of Bigbluebutton. It uses the [sheperd.js](https://github.com/shepherd-pro/shepherd) library.
 
+`shepherd.js` is pinned to `11.2.0` on purpose: 14.x and later are AGPL-3.0 (dual-licensed with a commercial license), and 12.x–13.x bundle a vulnerable `deepmerge-ts` ([GHSA-ggr8-5vv4-36mx](https://github.com/advisories/GHSA-ggr8-5vv4-36mx)). Don't upgrade it without a license review.
+
 ![Gif of plugin demo](./public/assets/plugin.gif)
 
 You can configure some "Learn More" links that are shown in some steps (screenshare, whiteboard, general) in the settings of the plugin, see example below.
