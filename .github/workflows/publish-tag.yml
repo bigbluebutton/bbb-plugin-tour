@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Get triggering user's email
         run: |
@@ -39,7 +39,7 @@ jobs:
           set -euo pipefail
 
           # 1) Install deps
-          npm install
+          npm ci
 
           # 2) Bump package.json + package-lock.json but DO NOT commit/tag yet
           npm version ${{ github.event.inputs.release_type }} --no-git-tag-version
