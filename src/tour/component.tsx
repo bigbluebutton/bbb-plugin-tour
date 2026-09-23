@@ -26,6 +26,19 @@ const intlMessages = defineMessages({
   },
 });
 
+// The texts of a locale file the plugin ships, or none
+const loadMessages = (locale: string): Record<string, string> => {
+  try {
+    /* eslint-disable import/no-dynamic-require, global-require,
+     @typescript-eslint/no-require-imports */
+    return require(`../../public/locales/${locale.replace('-', '_')}.json`);
+    /* eslint-enable import/no-dynamic-require, global-require,
+     @typescript-eslint/no-require-imports */
+  } catch {
+    return {};
+  }
+};
+
 /**
  * Starts the tour with the steps defined by getTourFeatures()
  * @param {IntlShape} intl Intl object from react-intl
@@ -100,20 +113,16 @@ function TourPlugin(
   // TODO revisit when fixed
   // const settings = pluginApi.usePluginSettings()?.data;
 
-  /* eslint-disable import/no-dynamic-require, global-require,
-   @typescript-eslint/no-require-imports */
   const { data: clientSettings } = pluginApi.useCustomSubscription<
     ClientSettingsSubscriptionResultType
   >(CLIENT_SETTINGS_SUBSCRIPTION);
 
-  let messages = {};
-  try {
-    messages = require(`../../public/locales/${currentLocale.locale.replace('-', '_')}.json`);
-  } catch {
-    messages = require(`../../public/locales/${currentLocale.fallbackLocale.replace('-', '_')}.json`);
-  }
-  /* eslint-disable import/no-dynamic-require, global-require,
-  @typescript-eslint/no-require-imports */
+  // English has every text, so it fills in the ones a translation lacks
+  const messages = {
+    ...loadMessages('en'),
+    ...loadMessages(currentLocale.fallbackLocale),
+    ...loadMessages(currentLocale.locale),
+  };
 
   const intl = createIntl({
     locale: currentLocale.locale,
