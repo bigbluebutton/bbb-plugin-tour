@@ -118,9 +118,9 @@ function TourPlugin(
 
   let messages = {};
   try {
-    messages = require(`../locales/${currentLocale.locale.replace('-', '_')}.json`);
+    messages = require(`../../public/locales/${currentLocale.locale.replace('-', '_')}.json`);
   } catch {
-    messages = require(`../locales/${currentLocale.fallbackLocale.replace('-', '_')}.json`);
+    messages = require(`../../public/locales/${currentLocale.fallbackLocale.replace('-', '_')}.json`);
   }
 
   const intl = createIntl({
@@ -131,7 +131,7 @@ function TourPlugin(
 
   useEffect(() => {
     const plugins = clientSettings?.meeting_clientSettings[0]?.clientSettingsJson?.public?.plugins;
-    const tourPlugin = plugins?.find((plugin) => plugin.name === 'TourPlugin');
+    const tourPlugin = plugins?.find((plugin) => plugin.name === 'BbbPluginTour');
     if (tourPlugin && tourPlugin?.settings) {
       setSettings(tourPlugin.settings);
     }

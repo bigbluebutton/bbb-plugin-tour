@@ -1,7 +1,7 @@
 {
-  "name": "tour-plugin",
-  "version": "0.2.0",
-  "private": true,
+  "name": "bbb-plugin-tour",
+  "version": "0.1.0",
+  "private": false,
   "main": "./src/index.tsx",
   "engines": {
     "node": ">=22.15.0"

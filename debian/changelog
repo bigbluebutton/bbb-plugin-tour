@@ -1,0 +1,17 @@
+bbb-plugin-tour (0.1.0) jammy; urgency=medium
+
+  * Merge v0.0.x into v0.1.x, the BigBlueButton 4.0 line
+
+ -- germanocaumo <germanocaumo@gmail.com>  Wed, 23 Sep 2026 11:02:07 -0300
+
+bbb-plugin-tour (0.0.6) jammy; urgency=medium
+
+* Merge pull request #18 from bigbluebutton/tag-cut-changelog (f9f4919)
+
+ -- antobinary <github-actions@github.com>  Tue, 18 Nov 2025 16:46:17 +0000
+
+bbb-plugin-tour (0.1.0) jammy; urgency=medium
+
+  * initial build
+
+ -- Anton Georgiev <anton.georgiev@blindsidenetworks.com>  Thu, 13 Feb 2025 14:56:18 -0400

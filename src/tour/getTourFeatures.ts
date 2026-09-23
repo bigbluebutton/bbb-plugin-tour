@@ -145,7 +145,7 @@ const getBackButton = (intl: IntlShape, tour: Tour): Step.StepOptionsButton => (
 
 const getKnowMoreButton = (intl: IntlShape, url?: string): Step.StepOptionsButton => ({
   text: intl.formatMessage(intlMessages.knowMore),
-  action: () => { window.open(url); },
+  action: () => { window.open(url, '_blank', 'noopener,noreferrer'); },
   secondary: true,
 });
 

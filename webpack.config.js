@@ -5,8 +5,8 @@ const path = require('path');
 module.exports = {
   entry: './src/index.tsx',
   output: {
-    filename: 'TourPlugin.js',
-    library: 'TourPlugin',
+    filename: 'BbbPluginTour.js',
+    library: 'BbbPluginTour',
     libraryTarget: 'umd',
     publicPath: '/',
     globalObject: 'this',
@@ -53,6 +53,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: 'manifest.json', to: './' }, // Copy manifest.json to static/ in the output folder
+        { from: 'public/locales/', to: './locales/' }, // Copy all locales to the output folder
       ],
     }),
   ],
