@@ -26,6 +26,17 @@ const intlMessages = defineMessages({
   },
 });
 
+// The client can hand over tags Intl rejects, such as en-US@posix from a POSIX
+// browser locale, and createIntl throws on those, so use the first valid one
+const toIntlLocale = (...locales: string[]): string => locales.find((locale) => {
+  try {
+    Intl.NumberFormat.supportedLocalesOf(locale);
+    return true;
+  } catch {
+    return false;
+  }
+}) ?? 'en';
+
 // The texts of a locale file the plugin ships, or none
 const loadMessages = (locale: string): Record<string, string> => {
   try {
@@ -128,7 +139,7 @@ function TourPlugin(
   };
 
   const intl = createIntl({
-    locale: currentLocale.locale,
+    locale: toIntlLocale(currentLocale.locale, currentLocale.fallbackLocale),
     messages,
     fallbackOnEmptyString: true,
   });
