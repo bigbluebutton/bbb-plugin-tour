@@ -12,7 +12,7 @@ import {
 } from 'bigbluebutton-html-plugin-sdk';
 import { TourPluginProps, Settings, ClientSettingsSubscriptionResultType } from './types';
 import getTourFeatures from './getTourFeatures';
-import { isNavigationExpanded, setNavigationExpanded } from './sidebar';
+import { SidebarState, getSidebarState, restoreSidebar } from './sidebar';
 import 'shepherd.js/dist/css/shepherd.css';
 import './custom.css';
 
@@ -92,7 +92,7 @@ function TourPlugin(
   BbbPluginSdk.initialize(uuid);
   const pluginApi: PluginApi = BbbPluginSdk.getPluginApi(uuid);
   const [presentationInitiallyOpened, setPresentationInitiallyOpened] = React.useState(true);
-  const navigationInitiallyExpanded = React.useRef<boolean | undefined>();
+  const sidebarInitialState = React.useRef<SidebarState>({});
   const [settings, setSettings] = React.useState<Settings>({});
 
   const currentLocale = pluginApi.useUiData(IntlLocaleUiDataNames.CURRENT_LOCALE, {
@@ -141,10 +141,8 @@ function TourPlugin(
     const endTourEvents = ['cancel', 'complete'];
 
     endTourEvents.forEach((event) => ShepherdEvents.on(event, () => {
-      // restores the navigation rail state after finishing the tour (mobile only)
-      if (navigationInitiallyExpanded.current !== undefined) {
-        setNavigationExpanded(navigationInitiallyExpanded.current);
-      }
+      // restores the navigation rail and panel after finishing the tour (mobile only)
+      restoreSidebar(pluginApi, sidebarInitialState.current);
       // restores presentation state after finishing the tour
       if (presentationInitiallyOpened !== layoutInformation[0]?.isOpen) {
         if (presentationInitiallyOpened) {
@@ -169,7 +167,7 @@ function TourPlugin(
         icon: 'presentation',
         onClick: async () => {
           setPresentationInitiallyOpened(layoutInformation[0]?.isOpen);
-          navigationInitiallyExpanded.current = isNavigationExpanded();
+          sidebarInitialState.current = getSidebarState();
           pluginLogger.info({
             logCode: 'plg_started',
           }, `Plugin started: ${pluginApi.pluginName}`);

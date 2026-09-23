@@ -3,7 +3,7 @@ import { PluginApi } from 'bigbluebutton-html-plugin-sdk';
 import type Step from 'shepherd.js/src/types/step';
 import type Tour from 'shepherd.js/src/types/tour';
 import { Settings, TourFeature } from './types';
-import { NAVIGATION_TOGGLE, setNavigationExpanded } from './sidebar';
+import { NAVIGATION_TOGGLE, setNavigationExpanded, uncoverMediaArea } from './sidebar';
 
 const intlMessages = defineMessages({
   next: {
@@ -166,7 +166,7 @@ const getTourFeatures = (
 ): TourFeature[] => {
   const actions = {
     expandNavigation: () => setNavigationExpanded(true),
-    collapseNavigation: () => setNavigationExpanded(false),
+    uncoverMediaArea: () => uncoverMediaArea(pluginApi),
     openPresentation: () => {
       if (!presentationInitiallyOpened) {
         pluginApi.uiCommands.presentationArea.open();
@@ -189,7 +189,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        beforeShowPromise: actions.collapseNavigation,
+        beforeShowPromise: actions.uncoverMediaArea,
       },
     ],
   };
@@ -206,7 +206,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        beforeShowPromise: actions.collapseNavigation,
+        beforeShowPromise: actions.uncoverMediaArea,
       },
     ],
   };
@@ -223,7 +223,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        beforeShowPromise: actions.collapseNavigation,
+        beforeShowPromise: actions.uncoverMediaArea,
       },
     ],
   };
@@ -240,7 +240,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        beforeShowPromise: actions.collapseNavigation,
+        beforeShowPromise: actions.uncoverMediaArea,
       },
     ],
   };
@@ -257,7 +257,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        beforeShowPromise: actions.collapseNavigation,
+        beforeShowPromise: actions.uncoverMediaArea,
       },
     ],
   };
@@ -278,7 +278,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        beforeShowPromise: actions.collapseNavigation,
+        beforeShowPromise: actions.uncoverMediaArea,
       },
     ],
   };
@@ -298,7 +298,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        beforeShowPromise: actions.collapseNavigation,
+        beforeShowPromise: actions.uncoverMediaArea,
       },
     ],
   };
@@ -318,7 +318,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        beforeShowPromise: actions.collapseNavigation,
+        beforeShowPromise: actions.uncoverMediaArea,
       },
     ],
   };
@@ -395,7 +395,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        beforeShowPromise: actions.collapseNavigation,
+        beforeShowPromise: actions.uncoverMediaArea,
       },
     ],
   };
@@ -412,7 +412,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        beforeShowPromise: actions.collapseNavigation,
+        beforeShowPromise: actions.uncoverMediaArea,
       },
     ],
   };
@@ -502,7 +502,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        beforeShowPromise: actions.collapseNavigation,
+        beforeShowPromise: actions.uncoverMediaArea,
       },
     ],
   };
