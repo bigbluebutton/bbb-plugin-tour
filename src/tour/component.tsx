@@ -12,6 +12,7 @@ import {
 } from 'bigbluebutton-html-plugin-sdk';
 import { TourPluginProps, Settings, ClientSettingsSubscriptionResultType } from './types';
 import getTourFeatures from './getTourFeatures';
+import { SidebarState, getSidebarState, restoreSidebar } from './sidebar';
 import 'shepherd.js/dist/css/shepherd.css';
 import './custom.css';
 
@@ -31,6 +32,17 @@ const intlMessages = defineMessages({
   },
 });
 
+// The client can hand over tags Intl rejects, such as en-US@posix from a POSIX
+// browser locale, and createIntl throws on those, so use the first valid one
+const toIntlLocale = (...locales: string[]): string => locales.find((locale) => {
+  try {
+    Intl.NumberFormat.supportedLocalesOf(locale);
+    return true;
+  } catch {
+    return false;
+  }
+}) ?? 'en';
+
 /**
  * Starts the tour with the steps defined by getTourFeatures()
  * @param {IntlShape} intl Intl object from react-intl
@@ -38,7 +50,7 @@ const intlMessages = defineMessages({
  */
 export function startTour(
   intl: IntlShape,
-  URLS: object,
+  URLS: Settings['url'],
   pluginApi: PluginApi,
   presentationInitiallyOpened: boolean,
 ) {
@@ -67,7 +79,7 @@ export function startTour(
         showOn: () => !!document.querySelector(
           step.attachTo.element,
         ),
-      } as Parameters<typeof tour.addStep>[0]);
+      });
     });
   });
 
@@ -80,6 +92,7 @@ function TourPlugin(
   BbbPluginSdk.initialize(uuid);
   const pluginApi: PluginApi = BbbPluginSdk.getPluginApi(uuid);
   const [presentationInitiallyOpened, setPresentationInitiallyOpened] = React.useState(true);
+  const sidebarInitialState = React.useRef<SidebarState>({});
   const [settings, setSettings] = React.useState<Settings>({});
 
   const currentLocale = pluginApi.useUiData(IntlLocaleUiDataNames.CURRENT_LOCALE, {
@@ -111,7 +124,7 @@ function TourPlugin(
   }
 
   const intl = createIntl({
-    locale: currentLocale.locale,
+    locale: toIntlLocale(currentLocale.locale, currentLocale.fallbackLocale),
     messages,
     fallbackOnEmptyString: true,
   });
@@ -127,10 +140,9 @@ function TourPlugin(
   useEffect(() => {
     const endTourEvents = ['cancel', 'complete'];
 
-    // restores the panel state after finishing the tour
     endTourEvents.forEach((event) => ShepherdEvents.on(event, () => {
-      // reopen sidebar
-      pluginApi.uiCommands.sidekickOptionsContainer.open();
+      // restores the navigation rail and panel after finishing the tour (mobile only)
+      restoreSidebar(pluginApi, sidebarInitialState.current);
       // restores presentation state after finishing the tour
       if (presentationInitiallyOpened !== layoutInformation[0]?.isOpen) {
         if (presentationInitiallyOpened) {
@@ -140,7 +152,7 @@ function TourPlugin(
         }
       }
       // removes events
-      endTourEvents.forEach((event) => ShepherdEvents.off(event, undefined));
+      endTourEvents.forEach((endEvent) => ShepherdEvents.off(endEvent, undefined));
     }));
     return () => {
       // removes events
@@ -155,12 +167,10 @@ function TourPlugin(
         icon: 'presentation',
         onClick: async () => {
           setPresentationInitiallyOpened(layoutInformation[0]?.isOpen);
+          sidebarInitialState.current = getSidebarState();
           pluginLogger.info({
             logCode: 'plg_started',
           }, `Plugin started: ${pluginApi.pluginName}`);
-          // ensure only userList is open (to also work on Mobile)
-          pluginApi.uiCommands.sidekickOptionsContainer.close();
-          pluginApi.uiCommands.sidekickOptionsContainer.open();
           // ensure presentation is open before start (it will be closed after)
           pluginApi.uiCommands.presentationArea.open();
           // wait some time for the ui to update
