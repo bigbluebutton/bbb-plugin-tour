@@ -43,6 +43,15 @@ const toIntlLocale = (...locales: string[]): string => locales.find((locale) => 
   }
 }) ?? 'en';
 
+// The texts of a locale file the plugin ships, or none
+const loadMessages = (locale: string): Record<string, string> => {
+  try {
+    return require(`../../public/locales/${locale.replace('-', '_')}.json`);
+  } catch {
+    return {};
+  }
+};
+
 /**
  * Starts the tour with the steps defined by getTourFeatures()
  * @param {IntlShape} intl Intl object from react-intl
@@ -116,12 +125,12 @@ function TourPlugin(
     ClientSettingsSubscriptionResultType
   >(CLIENT_SETTINGS_SUBSCRIPTION);
 
-  let messages = {};
-  try {
-    messages = require(`../../public/locales/${currentLocale.locale.replace('-', '_')}.json`);
-  } catch {
-    messages = require(`../../public/locales/${currentLocale.fallbackLocale.replace('-', '_')}.json`);
-  }
+  // English is the only complete translation, so it fills the texts the others lack
+  const messages = {
+    ...loadMessages('en'),
+    ...loadMessages(currentLocale.fallbackLocale),
+    ...loadMessages(currentLocale.locale),
+  };
 
   const intl = createIntl({
     locale: toIntlLocale(currentLocale.locale, currentLocale.fallbackLocale),
