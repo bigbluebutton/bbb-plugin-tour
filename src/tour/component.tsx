@@ -121,6 +121,9 @@ function TourPlugin(
   const messages = {
     ...loadMessages('en'),
     ...loadMessages(currentLocale.fallbackLocale),
+    // the client names its locale after its own files, such as it-IT for its
+    // it_IT.json, so also load the plugin's file for the language alone
+    ...loadMessages(currentLocale.locale.split(/[-_]/)[0]),
     ...loadMessages(currentLocale.locale),
   };
 
