@@ -1,5 +1,6 @@
 {
   "requiredSdkVersion": "^0.1.14",
-  "name": "TourPlugin",
-  "javascriptEntrypointUrl": "TourPlugin.js"
+  "name": "BbbPluginTour",
+  "version": "0.1.0",
+  "javascriptEntrypointUrl": "BbbPluginTour.js"
 }

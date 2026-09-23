@@ -43,6 +43,15 @@ const toIntlLocale = (...locales: string[]): string => locales.find((locale) => 
   }
 }) ?? 'en';
 
+// The texts of a locale file the plugin ships, or none
+const loadMessages = (locale: string): Record<string, string> => {
+  try {
+    return require(`../../public/locales/${locale.replace('-', '_')}.json`);
+  } catch {
+    return {};
+  }
+};
+
 /**
  * Starts the tour with the steps defined by getTourFeatures()
  * @param {IntlShape} intl Intl object from react-intl
@@ -116,12 +125,15 @@ function TourPlugin(
     ClientSettingsSubscriptionResultType
   >(CLIENT_SETTINGS_SUBSCRIPTION);
 
-  let messages = {};
-  try {
-    messages = require(`../locales/${currentLocale.locale.replace('-', '_')}.json`);
-  } catch {
-    messages = require(`../locales/${currentLocale.fallbackLocale.replace('-', '_')}.json`);
-  }
+  // English is the only complete translation, so it fills the texts the others lack
+  const messages = {
+    ...loadMessages('en'),
+    ...loadMessages(currentLocale.fallbackLocale),
+    // the client names its locale after its own files, such as it-IT for its
+    // it_IT.json, so also load the plugin's file for the language alone
+    ...loadMessages(currentLocale.locale.split(/[-_]/)[0]),
+    ...loadMessages(currentLocale.locale),
+  };
 
   const intl = createIntl({
     locale: toIntlLocale(currentLocale.locale, currentLocale.fallbackLocale),
@@ -131,7 +143,9 @@ function TourPlugin(
 
   useEffect(() => {
     const plugins = clientSettings?.meeting_clientSettings[0]?.clientSettingsJson?.public?.plugins;
-    const tourPlugin = plugins?.find((plugin) => plugin.name === 'TourPlugin');
+    // 4.0 servers set up before the rename configure the plugin as TourPlugin
+    const tourPlugin = plugins?.find((plugin) => plugin.name === 'BbbPluginTour')
+      ?? plugins?.find((plugin) => plugin.name === 'TourPlugin');
     if (tourPlugin && tourPlugin?.settings) {
       setSettings(tourPlugin.settings);
     }
