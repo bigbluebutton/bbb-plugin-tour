@@ -9,7 +9,7 @@ Homepage: https://github.com/bigbluebutton/bbb-plugin-tour
 Package: bbb-plugin-tour
 Architecture: all
 Depends: ${misc:Depends}, nodejs
-Description: Share a webpage with all session participants
- An official BigBlueButton plugin which allows
- the presenter to display a web page to
- all viewers inside of a session.
+Description: Guided tour of the BigBlueButton client
+ An official BigBlueButton plugin which adds a guided
+ tour of the client's main features to the options
+ menu of a session.

@@ -26,6 +26,30 @@ const intlMessages = defineMessages({
   },
 });
 
+// The client can hand over tags Intl rejects, such as en-US@posix from a POSIX
+// browser locale, and createIntl throws on those, so use the first valid one
+const toIntlLocale = (...locales: string[]): string => locales.find((locale) => {
+  try {
+    Intl.NumberFormat.supportedLocalesOf(locale);
+    return true;
+  } catch {
+    return false;
+  }
+}) ?? 'en';
+
+// The texts of a locale file the plugin ships, or none
+const loadMessages = (locale: string): Record<string, string> => {
+  try {
+    /* eslint-disable import/no-dynamic-require, global-require,
+     @typescript-eslint/no-require-imports */
+    return require(`../../public/locales/${locale.replace('-', '_')}.json`);
+    /* eslint-enable import/no-dynamic-require, global-require,
+     @typescript-eslint/no-require-imports */
+  } catch {
+    return {};
+  }
+};
+
 /**
  * Starts the tour with the steps defined by getTourFeatures()
  * @param {IntlShape} intl Intl object from react-intl
@@ -100,23 +124,22 @@ function TourPlugin(
   // TODO revisit when fixed
   // const settings = pluginApi.usePluginSettings()?.data;
 
-  /* eslint-disable import/no-dynamic-require, global-require,
-   @typescript-eslint/no-require-imports */
   const { data: clientSettings } = pluginApi.useCustomSubscription<
     ClientSettingsSubscriptionResultType
   >(CLIENT_SETTINGS_SUBSCRIPTION);
 
-  let messages = {};
-  try {
-    messages = require(`../../public/locales/${currentLocale.locale.replace('-', '_')}.json`);
-  } catch {
-    messages = require(`../../public/locales/${currentLocale.fallbackLocale.replace('-', '_')}.json`);
-  }
-  /* eslint-disable import/no-dynamic-require, global-require,
-  @typescript-eslint/no-require-imports */
+  // English has every text, so it fills in the ones a translation lacks
+  const messages = {
+    ...loadMessages('en'),
+    ...loadMessages(currentLocale.fallbackLocale),
+    // the client names its locale after its own files, such as it-IT for its
+    // it_IT.json, so also load the plugin's file for the language alone
+    ...loadMessages(currentLocale.locale.split(/[-_]/)[0]),
+    ...loadMessages(currentLocale.locale),
+  };
 
   const intl = createIntl({
-    locale: currentLocale.locale,
+    locale: toIntlLocale(currentLocale.locale, currentLocale.fallbackLocale),
     messages,
     fallbackOnEmptyString: true,
   });
