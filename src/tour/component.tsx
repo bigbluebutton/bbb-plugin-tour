@@ -12,6 +12,7 @@ import {
 } from 'bigbluebutton-html-plugin-sdk';
 import { TourPluginProps, Settings, ClientSettingsSubscriptionResultType } from './types';
 import getTourFeatures from './getTourFeatures';
+import { isNavigationExpanded, setNavigationExpanded } from './sidebar';
 import 'shepherd.js/dist/css/shepherd.css';
 import './custom.css';
 
@@ -91,6 +92,7 @@ function TourPlugin(
   BbbPluginSdk.initialize(uuid);
   const pluginApi: PluginApi = BbbPluginSdk.getPluginApi(uuid);
   const [presentationInitiallyOpened, setPresentationInitiallyOpened] = React.useState(true);
+  const navigationInitiallyExpanded = React.useRef<boolean | undefined>();
   const [settings, setSettings] = React.useState<Settings>({});
 
   const currentLocale = pluginApi.useUiData(IntlLocaleUiDataNames.CURRENT_LOCALE, {
@@ -138,10 +140,11 @@ function TourPlugin(
   useEffect(() => {
     const endTourEvents = ['cancel', 'complete'];
 
-    // restores the panel state after finishing the tour
     endTourEvents.forEach((event) => ShepherdEvents.on(event, () => {
-      // reopen sidebar
-      pluginApi.uiCommands.sidekickOptionsContainer.open();
+      // restores the navigation rail state after finishing the tour (mobile only)
+      if (navigationInitiallyExpanded.current !== undefined) {
+        setNavigationExpanded(navigationInitiallyExpanded.current);
+      }
       // restores presentation state after finishing the tour
       if (presentationInitiallyOpened !== layoutInformation[0]?.isOpen) {
         if (presentationInitiallyOpened) {
@@ -166,12 +169,10 @@ function TourPlugin(
         icon: 'presentation',
         onClick: async () => {
           setPresentationInitiallyOpened(layoutInformation[0]?.isOpen);
+          navigationInitiallyExpanded.current = isNavigationExpanded();
           pluginLogger.info({
             logCode: 'plg_started',
           }, `Plugin started: ${pluginApi.pluginName}`);
-          // ensure only userList is open (to also work on Mobile)
-          pluginApi.uiCommands.sidekickOptionsContainer.close();
-          pluginApi.uiCommands.sidekickOptionsContainer.open();
           // ensure presentation is open before start (it will be closed after)
           pluginApi.uiCommands.presentationArea.open();
           // wait some time for the ui to update

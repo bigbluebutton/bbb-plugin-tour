@@ -3,6 +3,7 @@ import { PluginApi } from 'bigbluebutton-html-plugin-sdk';
 import type Step from 'shepherd.js/src/types/step';
 import type Tour from 'shepherd.js/src/types/tour';
 import { Settings, TourFeature } from './types';
+import { NAVIGATION_TOGGLE, setNavigationExpanded } from './sidebar';
 
 const intlMessages = defineMessages({
   next: {
@@ -164,12 +165,8 @@ const getTourFeatures = (
   presentationInitiallyOpened: boolean,
 ): TourFeature[] => {
   const actions = {
-    closePanel: () => {
-      pluginApi.uiCommands.sidekickOptionsContainer.close();
-    },
-    openUserList: () => {
-      pluginApi.uiCommands.sidekickOptionsContainer.open();
-    },
+    expandNavigation: () => setNavigationExpanded(true),
+    collapseNavigation: () => setNavigationExpanded(false),
     openPresentation: () => {
       if (!presentationInitiallyOpened) {
         pluginApi.uiCommands.presentationArea.open();
@@ -192,9 +189,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        when: {
-          'before-show': () => actions.closePanel(),
-        },
+        beforeShowPromise: actions.collapseNavigation,
       },
     ],
   };
@@ -211,9 +206,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        when: {
-          'before-show': () => actions.closePanel(),
-        },
+        beforeShowPromise: actions.collapseNavigation,
       },
     ],
   };
@@ -230,9 +223,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        when: {
-          'before-show': () => actions.closePanel(),
-        },
+        beforeShowPromise: actions.collapseNavigation,
       },
     ],
   };
@@ -249,9 +240,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        when: {
-          'before-show': () => actions.closePanel(),
-        },
+        beforeShowPromise: actions.collapseNavigation,
       },
     ],
   };
@@ -268,9 +257,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        when: {
-          'before-show': () => actions.closePanel(),
-        },
+        beforeShowPromise: actions.collapseNavigation,
       },
     ],
   };
@@ -291,9 +278,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        when: {
-          'before-show': () => actions.closePanel(),
-        },
+        beforeShowPromise: actions.collapseNavigation,
       },
     ],
   };
@@ -313,9 +298,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        when: {
-          'before-show': () => actions.closePanel(),
-        },
+        beforeShowPromise: actions.collapseNavigation,
       },
     ],
   };
@@ -335,9 +318,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        when: {
-          'before-show': () => actions.closePanel(),
-        },
+        beforeShowPromise: actions.collapseNavigation,
       },
     ],
   };
@@ -414,9 +395,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        when: {
-          'before-show': () => actions.closePanel(),
-        },
+        beforeShowPromise: actions.collapseNavigation,
       },
     ],
   };
@@ -433,9 +412,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        when: {
-          'before-show': () => actions.closePanel(),
-        },
+        beforeShowPromise: actions.collapseNavigation,
       },
     ],
   };
@@ -446,10 +423,7 @@ const getTourFeatures = (
     steps: [
       {
         id: 'userListToggle',
-        attachTo: {
-          element: '[data-test="toggleSidebarNavigation"], [data-test="hasUnreadMessages"]',
-          on: 'bottom',
-        },
+        attachTo: { element: NAVIGATION_TOGGLE, on: 'bottom' },
         text: intl.formatMessage(intlMessages.userListToggle),
         buttons: [
           getBackButton(intl, tour),
@@ -471,6 +445,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
+        beforeShowPromise: actions.expandNavigation,
       },
       {
         id: 'panel.userList',
@@ -480,6 +455,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
+        beforeShowPromise: actions.expandNavigation,
       },
       {
         id: 'panel.chat',
@@ -489,6 +465,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
+        beforeShowPromise: actions.expandNavigation,
       },
       {
         id: 'panel.sharedNotes',
@@ -498,9 +475,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        when: {
-          'before-show': () => actions.openUserList(),
-        },
+        beforeShowPromise: actions.expandNavigation,
       },
       {
         id: 'panel.appsGallery',
@@ -510,9 +485,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        when: {
-          'before-show': () => actions.openUserList(),
-        },
+        beforeShowPromise: actions.expandNavigation,
       },
     ],
   };
@@ -529,9 +502,7 @@ const getTourFeatures = (
           getBackButton(intl, tour),
           getNextButton(intl, tour),
         ],
-        when: {
-          'before-show': () => actions.closePanel(),
-        },
+        beforeShowPromise: actions.collapseNavigation,
       },
     ],
   };
