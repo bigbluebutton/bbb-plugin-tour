@@ -1,9 +1,10 @@
-name: Typescript - compile code
+name: Dependencies - audit production packages
 on: [pull_request]
+
 permissions:
   contents: read
 jobs:
-  ts-code-compilation:
+  npm-audit:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -15,9 +16,5 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24.x
-      - name: run npm ci
-        run: npm ci
-      - name: typescript code compilation
-        run: npx tsc
-      - name: build production bundle
-        run: npm run build-bundle
+      - name: audit the packages shipped in the bundle
+        run: npm audit --omit=dev
