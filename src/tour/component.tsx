@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 import Shepherd from 'shepherd.js';
+import type Evented from 'shepherd.js/src/types/evented';
 import { IntlShape, createIntl, defineMessages } from 'react-intl';
 import {
   BbbPluginSdk, OptionsDropdownOption, PluginApi,
@@ -13,6 +14,9 @@ import { TourPluginProps, Settings, ClientSettingsSubscriptionResultType } from 
 import getTourFeatures from './getTourFeatures';
 import 'shepherd.js/dist/css/shepherd.css';
 import './custom.css';
+
+// shepherd.js 11.x types omit the Evented methods its default export has at runtime
+const ShepherdEvents = Shepherd as unknown as Evented;
 
 export const CLIENT_SETTINGS_SUBSCRIPTION = `subscription ClientSettings {
   meeting_clientSettings {
@@ -124,7 +128,7 @@ function TourPlugin(
     const endTourEvents = ['cancel', 'complete'];
 
     // restores the panel state after finishing the tour
-    endTourEvents.forEach((event) => Shepherd.on(event, () => {
+    endTourEvents.forEach((event) => ShepherdEvents.on(event, () => {
       // reopen sidebar
       pluginApi.uiCommands.sidekickOptionsContainer.open();
       // restores presentation state after finishing the tour
@@ -136,11 +140,11 @@ function TourPlugin(
         }
       }
       // removes events
-      endTourEvents.forEach((event) => Shepherd.off(event, undefined));
+      endTourEvents.forEach((event) => ShepherdEvents.off(event, undefined));
     }));
     return () => {
       // removes events
-      endTourEvents.forEach((event) => Shepherd.off(event, undefined));
+      endTourEvents.forEach((event) => ShepherdEvents.off(event, undefined));
     };
   }, [layoutInformation]);
 
