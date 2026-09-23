@@ -2,6 +2,8 @@
 /* eslint-disable import/no-dynamic-require */
 import * as React from 'react';
 import { useEffect } from 'react';
+import { flushSync } from 'react-dom';
+import { createRoot, Root } from 'react-dom/client';
 import Shepherd from 'shepherd.js';
 import type Evented from 'shepherd.js/src/types/evented';
 import { IntlShape, createIntl, defineMessages } from 'react-intl';
@@ -13,8 +15,9 @@ import {
 import { TourPluginProps, Settings, ClientSettingsSubscriptionResultType } from './types';
 import getTourFeatures from './getTourFeatures';
 import { SidebarState, getSidebarState, restoreSidebar } from './sidebar';
+import TourStepContent from './step-content/component';
+import ShepherdStyle from './styles';
 import 'shepherd.js/dist/css/shepherd.css';
-import './custom.css';
 
 // shepherd.js 11.x types omit the Evented methods its default export has at runtime
 const ShepherdEvents = Shepherd as unknown as Evented;
@@ -29,6 +32,10 @@ const intlMessages = defineMessages({
   start: {
     id: 'app.tour.startTour',
     description: 'start tour button label',
+  },
+  close: {
+    id: 'app.tour.button.close',
+    description: 'close tour button label',
   },
 });
 
@@ -66,13 +73,12 @@ export function startTour(
   // Docs: https://docs.shepherdpro.com/guides/usage/
   const tour = new Shepherd.Tour({
     defaultStepOptions: {
-      cancelIcon: {
-        enabled: true,
-      },
       canClickTarget: false,
     },
     useModalOverlay: true,
   });
+
+  const stepRoots: Root[] = [];
 
   getTourFeatures(
     intl,
@@ -81,9 +87,24 @@ export function startTour(
     pluginApi,
     presentationInitiallyOpened,
   ).forEach((feature) => {
-    feature.steps.forEach((step) => {
+    feature.steps.forEach(({ text, buttons = [], ...step }) => {
+      const stepContainer = document.createElement('div');
+      const stepRoot = createRoot(stepContainer);
+      // Shepherd collects a step's focusable elements for its Tab trap when the
+      // step mounts, so the buttons must be in the DOM before the tour starts
+      flushSync(() => stepRoot.render(
+        <TourStepContent
+          text={text}
+          buttons={buttons}
+          closeLabel={intl.formatMessage(intlMessages.close)}
+          onClose={() => tour.cancel()}
+        />,
+      ));
+      stepRoots.push(stepRoot);
+
       tour.addStep({
         ...step,
+        text: stepContainer,
         // Only show step if the element is visible
         showOn: () => !!document.querySelector(
           step.attachTo.element,
@@ -91,6 +112,13 @@ export function startTour(
       });
     });
   });
+
+  // Deferred because the tour ends from a click handler inside one of these roots
+  const unmountStepRoots = () => queueMicrotask(
+    () => stepRoots.forEach((stepRoot) => stepRoot.unmount()),
+  );
+  tour.on('complete', unmountStepRoots);
+  tour.on('cancel', unmountStepRoots);
 
   tour.start();
 }
@@ -200,7 +228,7 @@ function TourPlugin(
     ]);
   }, [currentLocale, settings, layoutInformation]);
 
-  return null;
+  return <ShepherdStyle />;
 }
 
 export default TourPlugin;
