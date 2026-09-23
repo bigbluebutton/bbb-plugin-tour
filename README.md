@@ -46,7 +46,7 @@ We maintain a dedicated branch of this plugin for each supported SDK version. Th
 | Repository Branch | Plugin-SDK Version | BigBlueButton Core Version |
 | ----------------- | ------------------ | -------------------------- |
 | v0.0.x            | v0.0.x             | v3.0.x                     |
-| v0.1.x            | v0.1.x             | v3.1.x                     |
+| v0.1.x            | v0.1.x             | v4.0.x                     |
 
 Always choose the branch that matches the SDK version used by your BigBlueButton deployment.
 
@@ -87,10 +87,8 @@ pluginManifests=[{"url":"https://<your-domain>/path/to/manifest.json"}]
 Alternatively, you can add the same configuration to `bbb-web` so it is automatically applied to meetings created via the web application. In `/etc/bigbluebutton/bbb-web.properties`:
 
 ```properties
-bbb.plugin.manifests=[{"url":"https://<your-domain>/path/to/manifest.json"}]
+pluginManifests=[{"url":"https://<your-domain>/path/to/manifest.json"}]
 ```
-
-(Adjust the property name and syntax to match your current BigBlueButton version and plugin configuration conventions.)
 
 ## Development mode
 
@@ -129,7 +127,7 @@ That documentation covers:
 ### Compatibility with BigBlueButton versions
 
 * BigBlueButton 3.0.x: use branch `v0.0.x` (SDK v0.0.x).
-* BigBlueButton 3.1.x: use branch `v0.1.x` (SDK v0.1.x).
+* BigBlueButton 4.0.x: use branch `v0.1.x` (SDK v0.1.x).
 * For newer versions, check this repository’s branches and release notes.
 
 ## Deployment
@@ -217,7 +215,7 @@ For any organization-specific GDPR, FERPA, or children’s data questions, reuse
 ## Dependencies
 
 * **BigBlueButton HTML Plugin SDK** (matching the `Plugin-SDK Version` in the table above).
-* **Node.js and npm** for building the plugin (see the SDK documentation for the recommended versions; for example, Node 20.x).
+* **Node.js and npm** for building the plugin (Node 22.15 or later; the CI builds with Node 24).
 * **Shepherd.js**: used internally by the plugin for rendering the guided tour; it is bundled into the production build.
 
 For more information on what this plugin does and how it is wired internally, see the source code in this repository and the official BigBlueButton documentation.
