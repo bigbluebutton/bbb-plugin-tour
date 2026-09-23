@@ -143,7 +143,9 @@ function TourPlugin(
 
   useEffect(() => {
     const plugins = clientSettings?.meeting_clientSettings[0]?.clientSettingsJson?.public?.plugins;
-    const tourPlugin = plugins?.find((plugin) => plugin.name === 'BbbPluginTour');
+    // 4.0 servers set up before the rename configure the plugin as TourPlugin
+    const tourPlugin = plugins?.find((plugin) => plugin.name === 'BbbPluginTour')
+      ?? plugins?.find((plugin) => plugin.name === 'TourPlugin');
     if (tourPlugin && tourPlugin?.settings) {
       setSettings(tourPlugin.settings);
     }
