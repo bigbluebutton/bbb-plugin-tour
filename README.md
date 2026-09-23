@@ -46,7 +46,7 @@ We maintain a dedicated branch of this plugin for each supported SDK version. Th
 | Repository Branch | Plugin-SDK Version | BigBlueButton Core Version |
 | ----------------- | ------------------ | -------------------------- |
 | v0.0.x            | v0.0.x             | v3.0.x                     |
-| v0.1.x            | v0.1.x             | v4.0.x                     |
+| v0.1.x            | v1.0.0-beta.x      | v4.0.x                     |
 
 Always choose the branch that matches the SDK version used by your BigBlueButton deployment.
 
