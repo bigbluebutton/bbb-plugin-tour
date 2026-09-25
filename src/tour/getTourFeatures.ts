@@ -1,9 +1,10 @@
 import { IntlShape, defineMessages } from 'react-intl';
 import { PluginApi } from 'bigbluebutton-html-plugin-sdk';
-import type Step from 'shepherd.js/src/types/step';
 import type Tour from 'shepherd.js/src/types/tour';
 import { Settings, TourFeature } from './types';
 import { NAVIGATION_TOGGLE, setNavigationExpanded, uncoverMediaArea } from './sidebar';
+import { TOUR_STEP_BUTTON_VARIANTS } from './step-content/constants';
+import { TourStepButton } from './step-content/types';
 
 const intlMessages = defineMessages({
   next: {
@@ -132,26 +133,28 @@ const intlMessages = defineMessages({
   },
 });
 
-const getNextButton = (intl: IntlShape, tour: Tour): Step.StepOptionsButton => ({
+const getNextButton = (intl: IntlShape, tour: Tour): TourStepButton => ({
   text: intl.formatMessage(intlMessages.next),
-  action: tour.next,
+  action: () => tour.next(),
+  variant: TOUR_STEP_BUTTON_VARIANTS.PRIMARY,
 });
 
-const getBackButton = (intl: IntlShape, tour: Tour): Step.StepOptionsButton => ({
+const getBackButton = (intl: IntlShape, tour: Tour): TourStepButton => ({
   text: intl.formatMessage(intlMessages.back),
-  action: tour.back,
-  secondary: true,
+  action: () => tour.back(),
+  variant: TOUR_STEP_BUTTON_VARIANTS.SECONDARY,
 });
 
-const getKnowMoreButton = (intl: IntlShape, url?: string): Step.StepOptionsButton => ({
+const getKnowMoreButton = (intl: IntlShape, url?: string): TourStepButton => ({
   text: intl.formatMessage(intlMessages.knowMore),
   action: () => { window.open(url, '_blank', 'noopener,noreferrer'); },
-  secondary: true,
+  variant: TOUR_STEP_BUTTON_VARIANTS.TERTIARY,
 });
 
-const getCloseTourButton = (intl: IntlShape, tour: Tour): Step.StepOptionsButton => ({
+const getCloseTourButton = (intl: IntlShape, tour: Tour): TourStepButton => ({
   text: intl.formatMessage(intlMessages.close),
-  action: tour.complete,
+  action: () => tour.complete(),
+  variant: TOUR_STEP_BUTTON_VARIANTS.PRIMARY,
 });
 
 /**

@@ -72,7 +72,7 @@ dist/
 └── BbbPluginTour.js.LICENSE.txt
 ```
 
-These files can be hosted on any HTTPS server.
+The whole folder must be hosted together on any HTTPS server, since the client fetches the translations relative to the manifest (`localesBaseUrl`).
 
 If you host the JavaScript bundle separately from the manifest, remember to update the `javascriptEntrypointUrl` in `manifest.json` to the correct URL of `BbbPluginTour.js`.
 
