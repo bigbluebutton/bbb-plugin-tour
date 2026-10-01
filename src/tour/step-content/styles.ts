@@ -3,7 +3,13 @@ import { spacingSmall, spacingMedium } from '@bigbluebutton/bbb-ui-components-re
 
 const Header = styled.div`
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  gap: ${spacingSmall};
+  padding-left: ${spacingSmall};
+
+  > button {
+    margin-left: auto;
+  }
 `;
 
 const Body = styled.div`

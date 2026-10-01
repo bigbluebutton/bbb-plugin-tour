@@ -10,6 +10,8 @@ interface TourStepButton {
 }
 
 interface TourStepContentProps {
+    title?: string,
+    titleId: string,
     text: string,
     buttons: TourStepButton[],
     closeLabel: string,

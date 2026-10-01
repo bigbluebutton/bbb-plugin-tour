@@ -5,11 +5,12 @@ import { TourStepContentProps } from './types';
 import Styled from './styles';
 
 function TourStepContent({
-  text, buttons, closeLabel, onClose,
+  title, titleId, text, buttons, closeLabel, onClose,
 }: TourStepContentProps): React.ReactElement {
   return (
     <>
       <Styled.Header>
+        {title && <BBBTypography id={titleId} variant="header">{title}</BBBTypography>}
         <BBButton
           layout="circle"
           variant="subtle"

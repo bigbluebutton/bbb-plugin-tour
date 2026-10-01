@@ -79,13 +79,18 @@ export function startTour(
     pluginApi,
     presentationInitiallyOpened,
   ).forEach((feature) => {
-    feature.steps.forEach(({ text, buttons = [], ...step }) => {
+    feature.steps.forEach(({
+      title, text, buttons = [], ...step
+    }) => {
+      const titleId = `${step.id}-title`;
       const stepContainer = document.createElement('div');
       const stepRoot = createRoot(stepContainer);
       // Shepherd collects a step's focusable elements for its Tab trap when the
       // step mounts, so the buttons must be in the DOM before the tour starts
       flushSync(() => stepRoot.render(
         <TourStepContent
+          title={title}
+          titleId={titleId}
           text={text}
           buttons={buttons}
           closeLabel={intl.formatMessage(intlMessages.close)}
@@ -97,6 +102,14 @@ export function startTour(
       tour.addStep({
         ...step,
         text: stepContainer,
+        when: {
+          ...step.when,
+          // Shepherd only labels the dialog with a title it renders itself
+          show() {
+            if (title) this.getElement()?.setAttribute('aria-labelledby', titleId);
+            step.when?.show?.call(this);
+          },
+        },
         // Only show step if the element is visible
         showOn: () => !!document.querySelector(
           step.attachTo.element,

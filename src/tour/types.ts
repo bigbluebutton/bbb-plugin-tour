@@ -23,8 +23,9 @@ interface ClientSettingsSubscriptionResultType {
 }
 
 // Shepherd step options, attached to the element a selector finds, whose
-// text and buttons are rendered by TourStepContent
-interface TourStep extends Omit<Step.StepOptions, 'text' | 'buttons'> {
+// title, text and buttons are rendered by TourStepContent
+interface TourStep extends Omit<Step.StepOptions, 'title' | 'text' | 'buttons'> {
+    title?: string,
     text: string,
     buttons?: TourStepButton[],
     attachTo: {
