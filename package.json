@@ -7,11 +7,20 @@
     "node": ">=22.15.0"
   },
   "dependencies": {
+    "@bigbluebutton/bbb-ui-components-react": "0.7.0",
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.1",
+    "@mui/icons-material": "7.3.11",
+    "@mui/material": "7.3.11",
     "bigbluebutton-html-plugin-sdk": "0.1.26",
+    "prop-types": "15.8.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "react-icons": "5.7.0",
     "react-intl": "6.6.8",
-    "shepherd.js": "11.2.0"
+    "react-modal": "3.16.3",
+    "shepherd.js": "11.2.0",
+    "styled-components": "6.5.3"
   },
   "scripts": {
     "build-bundle": "webpack --mode production",

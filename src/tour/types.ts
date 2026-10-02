@@ -1,4 +1,5 @@
 import type Step from 'shepherd.js/src/types/step';
+import { TourStepButton } from './step-content/types';
 
 interface TourPluginProps {
     pluginName: string,
@@ -21,8 +22,12 @@ interface ClientSettingsSubscriptionResultType {
     }[];
 }
 
-// Shepherd step options, attached to the element a selector finds
-interface TourStep extends Step.StepOptions {
+// Shepherd step options, attached to the element a selector finds, whose
+// title, text and buttons are rendered by TourStepContent
+interface TourStep extends Omit<Step.StepOptions, 'title' | 'text' | 'buttons'> {
+    title?: string,
+    text: string,
+    buttons?: TourStepButton[],
     attachTo: {
         element: string,
         on: Step.PopperPlacement,

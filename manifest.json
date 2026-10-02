@@ -2,5 +2,14 @@
   "requiredSdkVersion": "^0.1.14",
   "name": "BbbPluginTour",
   "version": "0.1.0",
-  "javascriptEntrypointUrl": "BbbPluginTour.js"
+  "javascriptEntrypointUrl": "BbbPluginTour.js",
+  "localesBaseUrl": "locales",
+  "settingsSchema": [
+    {
+      "name": "url",
+      "label": "\"Know more\" links (general, screenshare, whiteboard)",
+      "required": false,
+      "type": "json"
+    }
+  ]
 }
