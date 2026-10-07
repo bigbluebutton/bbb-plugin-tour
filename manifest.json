@@ -1,7 +1,7 @@
 {
   "requiredSdkVersion": "^1.0.0-beta.2",
   "name": "BbbPluginTour",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "javascriptEntrypointUrl": "BbbPluginTour.js",
   "localesBaseUrl": "locales",
   "settingsSchema": [

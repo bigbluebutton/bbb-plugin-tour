@@ -1,3 +1,9 @@
+bbb-plugin-tour (0.1.1) jammy; urgency=medium
+
+* Merge pull request #36 from imdt-claudiop/chore/sdk-1.0.0-beta.2 (3b1e979)
+
+ -- GuiLeme <github-actions@github.com>  Wed, 07 Oct 2026 19:48:48 +0000
+
 bbb-plugin-tour (0.1.0) jammy; urgency=medium
 
   * Merge v0.0.x into v0.1.x, the BigBlueButton 4.0 line
