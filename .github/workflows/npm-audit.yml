@@ -15,6 +15,6 @@ jobs:
       - name: install node
         uses: actions/setup-node@v4
         with:
-          node-version: 26.x
+          node-version-file: '.nvmrc'
       - name: audit the packages shipped in the bundle
         run: npm audit --omit=dev
